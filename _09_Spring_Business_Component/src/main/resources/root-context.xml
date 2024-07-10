@@ -66,7 +66,7 @@
     <!--context:component-scan: 지정된 패키지의 class 중 @Component, @Controller, @Service, @Repository 어노테이션이
                                 달려있는 클래스들을 자동으로 객체를 생성하여 bean 객체로 등록하는 엘리먼트
     -->
-    <context:component-scan base-package="com.bit.springboard.coupling"/>
+    <context:component-scan base-package="com.bit.springboard"/>
 
 
     <!--라이브러리(jar 파일)의 클래스에는 어노테이션을 달 수 없기 때문에 bean 엘리먼트를 통해서
