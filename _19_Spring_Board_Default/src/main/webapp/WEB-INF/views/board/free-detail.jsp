@@ -2,7 +2,7 @@
   Created by IntelliJ IDEA.
   User: bitcamp
   Date: 24. 7. 12.
-  Time: 오후 6:29
+  Time: 오후 6:26
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -16,21 +16,21 @@
 
         <main>
             <div class="container w-50 mt-5 mb-5">
-                <h4>공지사항 상세</h4>
+                <h4>자유게시글 상세</h4>
             </div>
             <div class="container mt-3 w-50">
                 <form id="updateForm" action="#" method="post">
                     <div class="form-group">
                         <label for="title">제목</label>
-                        <input type="text" class="form-control" id="title" name="title" value="공지사항" required>
+                        <input type="text" class="form-control" id="title" name="title" value="게시글" required>
                     </div>
                     <div class="form-group mt-3">
                         <label for="writer">작성자</label>
-                        <input type="text" class="form-control" id="writer" name="writer" value="관리자" readonly>
+                        <input type="text" class="form-control" id="writer" name="writer" value="사용자1" readonly>
                     </div>
                     <div class="form-group mt-3">
                         <label for="content">내용</label>
-                        <textarea class="form-control" id="content" name="content" rows="10" required>공지사항</textarea>
+                        <textarea class="form-control" id="content" name="content" rows="10" required>게시글</textarea>
                     </div>
                     <div class="form-group mt-3">
                         <label for="regdate">등록일</label>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--쿼리문이 Dao 클래스에서 분리되어 온 것이기 때문에 namespace는 관례적으로 Dao 클래스명과 일치시킨다.-->
+<mapper namespace="FreeBoardDao">
+    <insert id="post" parameterType="board">
+        INSERT INTO FREEBOARD(
+            TITLE,
+            CONTENT,
+            WRITER_ID
+        ) VALUES(
+            #{title},
+            #{content},
+            #{WRITER_ID}
+        )
+    </insert>
+    <update id="modify" parameterType="board">
+        UPDATE FREEBOARD
+            SET
+                TITLE = #{title},
+                CONTENT = #{content},
+                MODDATE = #{moddate}
+            WHERE ID = #{id}
+    </update>
+    <select id="getBoardList" resultType="board">
+        SELECT FB.ID
+             , FB.TITLE
+             , FB.WRITER_ID
+             , MB.NICKNAME
+             , FB.REGDATE
+             , FB.MODDATE
+             , FB.CNT
+            FROM FREEBOARD FB
+            JOIN MEMBER MB
+              ON FB.WRITER_ID = MB.ID
+    </select>
+    <delete id="delete" parameterType="int">
+        DELETE FROM FREEBOARD
+            WHERE ID = #{ID}
+    </delete>
+    <select id="getBoard" parameterType="int" resultType="board">
+        SELECT FB.ID
+             , FB.TITLE
+             , FB.WRITER_ID
+             , MB.NICKNAME
+             , FB.REGDATE
+             , FB.MODDATE
+             , FB.CNT
+            FROM FREEBOARD FB
+            JOIN MEMBER MB
+              ON FB.WRITER_ID = MB.ID
+        WHERE FB.ID= #{ID}
+    </select>
+</mapper>
+

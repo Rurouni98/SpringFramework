@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--쿼리문이 Dao 클래스에서 분리되어 온 것이기 때문에 namespace는 관례적으로 Dao 클래스명과 일치시킨다.-->
+<mapper namespace="MemberDao">
+    <insert id="join" parameterType="member">
+        INSERT INTO MEMBER(
+            USERNAME,
+            PASSWORD,
+            EMAIL,
+            NICKNAME,
+            TEL
+        ) VALUES(
+            #{username},
+            #{password},
+            #{email},
+            #{nickname},
+            #{tel}
+        )
+    </insert>
+    <select id="getMembers" resultType="member">
+        SELECT ID
+             , USERNAME
+             , PASSWORD
+             , NICKNAME
+             , EMAIL
+             , TEL
+            FROM MEMBER
+    </select>
+    <select id="getMemberByUsername" parameterType="string" resultType="member">
+        SELECT ID
+             , USERNAME
+             , PASSWORD
+             , NICKNAME
+             , EMAIL
+             , TEL
+        FROM MEMBER
+        WHERE USERNAME = #{username}
+    </select>
+    <select id="usernameCheck" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+            FROM MEMBER
+            WHERE USERNAME = #{username}
+    </select>
+    <select id="nicknameCheck" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+            FROM MEMBER
+            WHERE NICKNAME = #{nickname}
+    </select>
+    <select id="login" parameterType="member" resultType="member">
+        SELECT ID
+             , USERNAME
+             , PASSWORD
+             , NICKNAME
+             , EMAIL
+             , TEL
+            FROM MEMBER
+            WHERE USERNAME = #{username}
+              AND PASSWORD = #{password}
+    </select>
+</mapper>
+
