@@ -60,12 +60,20 @@ public class FreeBoardDao {
         BoardDto boardDto = new BoardDto();
 
         // queryForObject의 두 번째 매개변수는 Object 배열 형태여야한다.
-        Object[] args = {id};
+//        Object[] args = {id};
 
         // SqlSessionTemplate의 selectOne 메소드 사용
-        mybatis.selectOne("FreeBoardDao.getBoard", id);
+        boardDto = mybatis.selectOne("FreeBoardDao.getBoard", id);
 
         System.out.println("FreeBoardDao의 getBoard 메소드 실행 종료");
         return boardDto;
+    }
+
+    public void plusCnt(int id) {
+        System.out.println("FreeBoardDao의 plusCnt 메소드 실행");
+
+        mybatis.update("FreeBoardDao.plusCnt", id);
+
+        System.out.println("FreeBoardDao의 plusCnt 메소드 실행 종료");
     }
 }

@@ -6,6 +6,9 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time" %>
+
 <html>
 <head>
 
@@ -19,30 +22,32 @@
                 <h4>공지사항 상세</h4>
             </div>
             <div class="container mt-3 w-50">
-                <form id="updateForm" action="#" method="post">
+                <form id="modify-form" action="/board/modify.do" method="post">
+                    <input type="hidden" name="id" value="${notice.id}">
+                    <input type="hidden" name="type" value="notice">
                     <div class="form-group">
                         <label for="title">제목</label>
-                        <input type="text" class="form-control" id="title" name="title" value="공지사항" required>
+                        <input type="text" class="form-control" id="title" name="title" value="${notice.title}" required>
                     </div>
                     <div class="form-group mt-3">
-                        <label for="writer">작성자</label>
-                        <input type="text" class="form-control" id="writer" name="writer" value="관리자" readonly>
+                        <label for="nickname">작성자</label>
+                        <input type="text" class="form-control" id="nickname" name="nickname" value="${notice.nickname}" readonly>
                     </div>
                     <div class="form-group mt-3">
                         <label for="content">내용</label>
-                        <textarea class="form-control" id="content" name="content" rows="10" required>공지사항</textarea>
+                        <textarea class="form-control" id="content" name="content" rows="10" required>${notice.content}</textarea>
                     </div>
                     <div class="form-group mt-3">
                         <label for="regdate">등록일</label>
-                        <input type="text" class="form-control" id="regdate" name="regdate" value="2024-06-28" required>
+                        <input type="text" class="form-control" id="regdate" name="regdate" value="<javatime:format value="${notice.regdate}" pattern="yyyy-MM-dd"/>" readonly required>
                     </div>
                     <div class="form-group mt-3">
                         <label for="moddate">수정일</label>
-                        <input type="text" class="form-control" id="moddate" name="moddate" value="2024-06-28" required>
+                        <input type="text" class="form-control" id="moddate" name="moddate" value="<javatime:format value="${notice.moddate}" pattern="yyyy-MM-dd"/>" readonly required>
                     </div>
                     <div class="form-group mt-3">
                         <label for="cnt">조회수</label>
-                        <input type="text" class="form-control" id="cnt" name="cnt" value="0" required>
+                        <input type="text" class="form-control" id="cnt" name="cnt" value="${notice.cnt}" readonly required>
                     </div>
                     <div class="form-group mt-3">
                         <label for="uploadFiles">파일첨부</label>
@@ -58,10 +63,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="container mt-3 mb-5 w-50 text-center">
-                        <button type="submit" id="btn-update" class="btn btn-outline-secondary">수정</button>
-                        <button type="button" id="btn-delete" class="btn btn-outline-secondary ml-2" onclick="location.href='/board/deleteBoard.do?boardNo=${getBoard.boardNo}'">삭제</button>
-                    </div>
+                    <c:if test="${loginMember != null && loginMember.role == 'ADMIN' && loginMember.id == notice.WRITER_ID}">
+                        <div class="container mt-3 mb-5 w-50 text-center">
+                            <button type="submit" id="btn-update" class="btn btn-outline-secondary">수정</button>
+                            <button type="button" id="btn-delete" class="btn btn-outline-secondary ml-2" onclick="location.href='/board/delete.do?id=${notice.id}&type=notice'">삭제</button>
+                        </div>
+                    </c:if>
                 </form>
             </div>
         </main>

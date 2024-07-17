@@ -11,6 +11,7 @@ public class MemberDto {
     private String nickname;
     private String email;
     private String tel;
+    private String role;
 
     public int getId() {
         return id;
@@ -60,6 +61,14 @@ public class MemberDto {
         this.tel = tel;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "MemberDto{" +
@@ -69,6 +78,7 @@ public class MemberDto {
                 ", nickname='" + nickname + '\'' +
                 ", email='" + email + '\'' +
                 ", tel='" + tel + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

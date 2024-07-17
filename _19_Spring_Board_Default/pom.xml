@@ -157,6 +157,13 @@
             <version>2.17.2</version>
         </dependency>
 
+        <!--시간을 기본 taglib보다 더 편하게 표현가능한 jsptag-->
+        <dependency>
+            <groupId>net.sargue</groupId>
+            <artifactId>java-time-jsptags</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

@@ -12,7 +12,11 @@
         ) VALUES(
             #{title},
             #{content},
-            #{WRITER_ID}
+            (
+                SELECT M.ID
+                    FROM MEMBER M
+                    WHERE M.NICKNAME = #{nickname}
+            )
         )
     </insert>
     <update id="modify" parameterType="board">
@@ -21,6 +25,12 @@
                 TITLE = #{title},
                 CONTENT = #{content},
                 MODDATE = #{moddate}
+            WHERE ID = #{id}
+    </update>
+    <update id="plusCnt" parameterType="int">
+        UPDATE FREEBOARD
+            SET
+                CNT = CNT + 1
             WHERE ID = #{id}
     </update>
     <select id="getBoardList" resultType="board">
@@ -42,6 +52,7 @@
     <select id="getBoard" parameterType="int" resultType="board">
         SELECT FB.ID
              , FB.TITLE
+             , FB.CONTENT
              , FB.WRITER_ID
              , MB.NICKNAME
              , FB.REGDATE

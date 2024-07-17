@@ -12,16 +12,26 @@
         ) VALUES(
             #{title},
             #{content},
-            #{WRITER_ID}
+            (
+                SELECT M.ID
+                    FROM MEMBER M
+                    WHERE M.NICKNAME = #{nickname}
+            )
         )
     </insert>
     <update id="modify" parameterType="board">
         UPDATE NOTICE
-            SET
-                TITLE = #{title},
-                CONTENT = #{content},
-                MODDATE = #{moddate}
-            WHERE ID = #{id}
+        SET
+            TITLE = #{title},
+            CONTENT = #{content},
+            MODDATE = #{moddate}
+        WHERE ID = #{id}
+    </update>
+    <update id="plusCnt" parameterType="int">
+        UPDATE NOTICE
+        SET
+            CNT = CNT + 1
+        WHERE ID = #{id}
     </update>
     <select id="getBoardList" resultType="board">
         SELECT N.ID
@@ -36,12 +46,13 @@
               ON N.WRITER_ID = MB.ID
     </select>
     <delete id="delete" parameterType="int">
-        DELETE FROM FREEBOARD
+        DELETE FROM NOTICE
             WHERE ID = #{ID}
     </delete>
     <select id="getBoard" parameterType="int" resultType="board">
         SELECT N.ID
              , N.TITLE
+             , N.CONTENT
              , N.WRITER_ID
              , MB.NICKNAME
              , N.REGDATE

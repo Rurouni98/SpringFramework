@@ -52,4 +52,12 @@ public class NoticeDao {
         return mybatis.selectOne("NoticeDao.getBoard", id);
     }
 
+    public void plusCnt(int id) {
+        System.out.println("NoticeDao의 plusCnt 메소드 실행");
+
+        mybatis.update("NoticeDao.plusCnt", id);
+
+        System.out.println("NoticeDao의 plusCnt 메소드 실행 종료");
+    }
+
 }
