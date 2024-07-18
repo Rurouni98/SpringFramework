@@ -1,7 +1,9 @@
 package com.bit.springboard.controller;
 
 import com.bit.springboard.dto.BoardDto;
+import com.bit.springboard.dto.Creteria;
 import com.bit.springboard.dto.MemberDto;
+import com.bit.springboard.dto.PageDto;
 import com.bit.springboard.service.BoardService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,22 +30,29 @@ public class BoardController {
     }
 
     @RequestMapping("free-list.do")
-    public String freeListView(Model model, @RequestParam Map<String, String> searchMap) {
+    public String freeListView(Model model, @RequestParam Map<String, String> searchMap, Creteria cri) {
+        System.out.println(cri);
 //        System.out.println(searchMap);
 
         boardService = applicationContext.getBean("freeBoardServiceImpl", BoardService.class);
 
-        model.addAttribute("freeBoardList", boardService.getBoardList(searchMap));
+        model.addAttribute("freeBoardList", boardService.getBoardList(searchMap, cri));
         model.addAttribute("searchMap", searchMap);
+
+        // 게시글 총 개수
+        int total = boardService.getBoardTotalCnt(searchMap);
+
+        // 화면에서 페이지 표시를 하기 위해 PageDto 객체 화면에 전달
+        model.addAttribute("page", new PageDto(cri, total));
 
         return "board/free-list";
     }
 
     @RequestMapping("notice-list.do")
-    public String noticeListView(Model model, @RequestParam Map<String, String> searchMap) {
+    public String noticeListView(Model model, @RequestParam Map<String, String> searchMap, Creteria cri) {
         boardService = applicationContext.getBean("noticeServiceImpl", BoardService.class);
 
-        model.addAttribute("noticeBoardList", boardService.getBoardList(searchMap));
+        model.addAttribute("noticeBoardList", boardService.getBoardList(searchMap, cri));
         model.addAttribute("searchMap", searchMap);
 
         return "board/notice-list";

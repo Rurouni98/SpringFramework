@@ -9,7 +9,6 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%--<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>--%>
 <%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time" %>
-<%--jstl 최신 버전이라, 현업에서 구버전을 쓰는 곳은 uri가 다르니 참조(1.2버전 많이 쓴다고 함)--%>
 <html>
 <head>
 
@@ -24,20 +23,26 @@
             </div>
             <div class="container mt-3 w-50">
                 <form id="search-form" action="/board/free-list.do" method="post">
+                    <input type="hidden" name="pageNum" value="${page.cri.pageNum}">
+                    <input type="hidden" name="amount" value="${page.cri.amount}">
                     <div class="row">
                         <div class="col-3">
                             <select class="form-select" name="searchCondition">
                                 <option value="all"
                                         <c:if test="${searchMap == null || searchMap.searchCondition == 'all'}">
+                                            selected
                                         </c:if>>전체</option>
                                 <option value="title"
-                                        <c:if test="${searchMap.searchCondition == 'title'}">selected
+                                        <c:if test="${searchMap.searchCondition == 'title'}">
+                                            selected
                                         </c:if>>제목</option>
                                 <option value="content"
-                                        <c:if test="${searchMap.searchCondition == 'content'}">selected
+                                        <c:if test="${searchMap.searchCondition == 'content'}">
+                                            selected
                                         </c:if>>내용</option>
                                 <option value="writer"
-                                        <c:if test="${searchMap.searchCondition == 'writer'}">selected
+                                        <c:if test="${searchMap.searchCondition == 'writer'}">
+                                            selected
                                         </c:if>>작성자</option>
                             </select>
                         </div>
@@ -67,43 +72,45 @@
                     </tr>
                     </thead>
                     <tbody class="table-group-divider">
-                        <c:forEach items="${freeBoardList}" var="freeBoard">
-                            <tr class="board-tr" onclick="location.href='/board/update-cnt.do?id=${freeBoard.id}&type=free'">
-                                <td>${freeBoard.id}</td>
-                                <td>${freeBoard.title}</td>
-                                <td>${freeBoard.nickname}</td>
-                                <td>
-                                    <javatime:format value="${freeBoard.regdate}" pattern="yyyy-MM-dd"/>
-                                </td>
-                                <td>${freeBoard.cnt}</td>
-                            </tr>
-                        </c:forEach>
+                    <c:forEach items="${freeBoardList}" var="freeBoard">
+                        <tr class="board-tr" onclick="location.href='/board/update-cnt.do?id=${freeBoard.id}&type=free'">
+                            <td>${freeBoard.id}</td>
+                            <td>${freeBoard.title}</td>
+                            <td>${freeBoard.nickname}</td>
+                            <td>
+                                <javatime:format value="${freeBoard.regdate}" pattern="yyyy-MM-dd"/>
+                            </td>
+                            <td>${freeBoard.cnt}</td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
             </div>
             <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        <a class="page-link link-secondary" aria-label="Previous">
-                            &laquo;
-                        </a>
-                    </li>
+                    <c:if test="${page.prev}">
+                        <li class="page-item">
+                            <a class="page-link link-secondary" aria-label="Previous" href="${page.cri.pageNum - 1}">
+                                &laquo;
+                            </a>
+                        </li>
+                    </c:if>
 
-                    <li class="page-item">
-                        <a class="page-link link-secondary">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link link-secondary">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link link-secondary">3</a>
-                    </li>
+                    <c:forEach begin="${page.startPage}"
+                               end="${page.endPage}"
+                               var="number">
+                        <li class="page-item">
+                            <a class="page-link link-secondary" href="${number}">${number}</a>
+                        </li>
+                    </c:forEach>
 
-                    <li class="page-item">
-                        <a class="page-link link-secondary" aria-label="Next">
-                            &raquo;
-                        </a>
-                    </li>
+                    <c:if test="${page.next}">
+                        <li class="page-item">
+                            <a class="page-link link-secondary" aria-label="Next" href="${page.cri.pageNum + 1}">
+                                &raquo;
+                            </a>
+                        </li>
+                    </c:if>
                 </ul>
             </nav>
 
@@ -119,6 +126,16 @@
     <script>
         $(() => {
             $("#search-icon").on("click", (e) => {
+                $("#search-form").submit();
+            });
+
+            $(".pagination a").on("click", (e) => {
+                e.preventDefault();
+
+                // console.log($(e.target).attr("href"));
+
+                $("input[name='pageNum']").val($(e.target).attr("href"));
+
                 $("#search-form").submit();
             });
         });

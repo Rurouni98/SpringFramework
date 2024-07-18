@@ -1,6 +1,7 @@
 package com.bit.springboard.dao;
 
 import com.bit.springboard.dto.BoardDto;
+import com.bit.springboard.dto.Creteria;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -33,7 +34,7 @@ public class NoticeDao {
         System.out.println("NoticeDao의 modify 메소드 실행 종료");
     }
 
-    public List<BoardDto> getBoardList(Map<String, String> searchMap) {
+    public List<BoardDto> getBoardList(Map<String, String> searchMap, Creteria cri) {
         System.out.println("NoticeDao의 getBoardList 메소드 실행");
 
         return mybatis.selectList("NoticeDao.getBoardList", searchMap);
@@ -61,4 +62,7 @@ public class NoticeDao {
         System.out.println("NoticeDao의 plusCnt 메소드 실행 종료");
     }
 
+    public int getBoardTotalCnt(Map<String, String> searchMap) {
+        return mybatis.selectOne("NoticeDao.getBoardTotalCnt", searchMap);
+    }
 }

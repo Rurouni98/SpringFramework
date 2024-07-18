@@ -1,7 +1,8 @@
 package com.bit.springboard.service.impl;
 
-import com.bit.springboard.dao.FreeBoardDao;
+import com.bit.springboard.dao.NoticeDao;
 import com.bit.springboard.dto.BoardDto;
+import com.bit.springboard.dto.Creteria;
 import com.bit.springboard.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,45 +12,47 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class FreeBoardServiceImpl implements BoardService {
-    private FreeBoardDao freeBoardDao;
+public class NoticeServiceImpl implements BoardService {
+    private NoticeDao noticeDao;
 
     @Autowired
-    public FreeBoardServiceImpl(FreeBoardDao freeBoardDao) {
-        this.freeBoardDao = freeBoardDao;
+    public NoticeServiceImpl(NoticeDao noticeDao) {
+        this.noticeDao = noticeDao;
     }
 
     @Override
     public void post(BoardDto boardDto) {
-//        if(boardDto.getId() == 0) {
-//            throw new RuntimeException("id에 0은 입력될 수 없습니다.");
-//        }
-        freeBoardDao.post(boardDto);
+        noticeDao.post(boardDto);
     }
 
     @Override
     public void modify(BoardDto boardDto) {
         boardDto.setModdate(LocalDateTime.now());
-        freeBoardDao.modify(boardDto);
+        noticeDao.modify(boardDto);
     }
 
     @Override
     public void plusCnt(int id) {
-        freeBoardDao.plusCnt(id);
+        noticeDao.plusCnt(id);
     }
 
     @Override
     public void delete(int id) {
-        freeBoardDao.delete(id);
+        noticeDao.delete(id);
     }
 
     @Override
-    public List<BoardDto> getBoardList(Map<String, String> searchMap) {
-        return freeBoardDao.getBoardList(searchMap);
+    public List<BoardDto> getBoardList(Map<String, String> searchMap, Creteria cri) {
+        return noticeDao.getBoardList(searchMap, cri);
     }
 
     @Override
     public BoardDto getBoard(int id) {
-        return freeBoardDao.getBoard(id);
+        return noticeDao.getBoard(id);
+    }
+
+    @Override
+    public int getBoardTotalCnt(Map<String, String> searchMap) {
+        return noticeDao.getBoardTotalCnt(searchMap);
     }
 }

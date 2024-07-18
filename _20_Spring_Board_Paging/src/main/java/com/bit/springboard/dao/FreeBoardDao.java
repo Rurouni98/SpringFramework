@@ -36,12 +36,12 @@ public class FreeBoardDao {
         System.out.println("FreeBoardDao의 modify 메소드 실행 종료");
     }
 
-    public List<BoardDto> getBoardList(Map<String, String> searchMap) {
+    public List<BoardDto> getBoardList(Map<String, Object> paramMap) {
         System.out.println("FreeBoardDao의 getBoardList 메소드 실행");
         List<BoardDto> boardDtoList = new ArrayList<>();
         // SqlSessionTemplate의 selectList메소드 사용
 
-        boardDtoList = mybatis.selectList("FreeBoardDao.getBoardList", searchMap);
+        boardDtoList = mybatis.selectList("FreeBoardDao.getBoardList", paramMap);
 
         System.out.println("FreeBoardDao의 getBoardList 메소드 실행 종료");
         return boardDtoList;
@@ -76,5 +76,9 @@ public class FreeBoardDao {
         mybatis.update("FreeBoardDao.plusCnt", id);
 
         System.out.println("FreeBoardDao의 plusCnt 메소드 실행 종료");
+    }
+
+    public int getBoardTotalCnt(Map<String, String> searchMap) {
+        return mybatis.selectOne("FreeBoardDao.getBoardTotalCnt", searchMap);
     }
 }

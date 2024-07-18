@@ -46,22 +46,23 @@
               ON FB.WRITER_ID = MB.ID
         -- mybatis의 동적 쿼리 사용
             WHERE 1=1
-        <if test="searchKeyword != null and searchKeyword != ''">
-            <if test="searchCondition == 'all'">
-                AND (FB.TITLE LIKE CONCAT('%',  #{searchKeyword}, '%')
-                OR FB.CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
-                OR MB.NICKNAME LIKE CONCAT('%', #{searchKeyword}, '%'))
+        <if test="search.searchKeyword != null and search.searchKeyword != ''">
+            <if test="search.searchCondition == 'all'">
+                AND (FB.TITLE LIKE CONCAT('%',  #{search.searchKeyword}, '%')
+                OR FB.CONTENT LIKE CONCAT('%', #{search.searchKeyword}, '%')
+                OR MB.NICKNAME LIKE CONCAT('%', #{search.searchKeyword}, '%'))
             </if>
-            <if test="searchCondition == 'title'">
-                AND FB.TITLE LIKE CONCAT('%',  #{searchKeyword}, '%')
+            <if test="search.searchCondition == 'title'">
+                AND FB.TITLE LIKE CONCAT('%',  #{search.searchKeyword}, '%')
             </if>
-            <if test="searchCondition == 'content'">
-                AND FB.CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
+            <if test="search.searchCondition == 'content'">
+                AND FB.CONTENT LIKE CONCAT('%', #{search.searchKeyword}, '%')
             </if>
-            <if test="searchCondition == 'writer'">
-                AND MB.NICKNAME LIKE CONCAT('%', #{searchKeyword}, '%')
+            <if test="search.searchCondition == 'writer'">
+                AND MB.NICKNAME LIKE CONCAT('%', #{search.searchKeyword}, '%')
             </if>
         </if>
+        LIMIT #{cri.amount} OFFSET #{cri.startNum}
     </select>
     <delete id="delete" parameterType="int">
         DELETE FROM FREEBOARD
@@ -80,6 +81,32 @@
             JOIN MEMBER MB
               ON FB.WRITER_ID = MB.ID
         WHERE FB.ID= #{ID}
+    </select>
+
+    <select id="getBoardTotalCnt" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+            FROM FREEBOARD F
+            JOIN MEMBER M
+              ON F.WRITER_ID = M.ID
+            WHERE 1=1
+            <if test="searchKey != null and searchKeyword !=''">
+                <if test="searchCondition == 'all'">
+                    AND (
+                        F.TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+                        OR F.CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
+                        OR M.NICKNAME LIKE CONCAT('%', #{searchKeyword}, '%')
+                    )
+                </if>
+                <if test="searchCondition == 'title'">
+                    AND F.TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+                </if>
+                <if test="searchCondition == 'content'">
+                    AND F.CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
+                </if>
+                <if test="searchCondition == 'writer'">
+                    AND F.NICKNAME LIKE CONCAT('%', #{searchKeyword}, '%')
+                </if>
+            </if>
     </select>
 </mapper>
 
