@@ -1,6 +1,6 @@
 package com.bit.springboard.dto;
 
-public class Creteria {
+public class Criteria {
     // 현재 페이지 번호
     private int pageNum;
     // 한 페이지에 표시할 게시물의 개수
@@ -8,11 +8,11 @@ public class Creteria {
     // 시작 게시글 번호
     private int startNum;
 
-    public Creteria() {
+    public Criteria() {
         this(1, 10);
     }
 
-    public Creteria(int pageNum, int amount) {
+    public Criteria(int pageNum, int amount) {
         this.pageNum = pageNum;
         this.amount = amount;
     }

@@ -1,6 +1,7 @@
 package com.bit.springboard.dao;
 
 import com.bit.springboard.dto.BoardDto;
+import com.bit.springboard.dto.BoardFileDto;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -17,10 +18,18 @@ public class NoticeDao {
         this.mybatis = sqlSessionTemplate;
     }
 
-    public void post(BoardDto boardDto) {
+    public void post(BoardDto boardDto, List<BoardFileDto> boardFileDtoList) {
         System.out.println("NoticeDao의 post 메소드 실행");
 
         mybatis.insert("NoticeDao.post", boardDto);
+
+        System.out.println("insert 실행 후 id값: " + boardDto.getId());
+
+        if(boardFileDtoList.size() > 0) {
+            boardFileDtoList.forEach(boardFileDto -> boardFileDto.setBoard_id(boardDto.getId()));
+
+            mybatis.insert("NoticeDao.uploadFiles", boardFileDtoList);
+        }
 
         System.out.println("NoticeDao의 post 메소드 실행 종료");
     }
@@ -41,6 +50,8 @@ public class NoticeDao {
 
     public void delete(int id) {
         System.out.println("Notice의 delete 메소드 실행");
+
+        mybatis.delete("NoticeDao.deleteFiles", id);
 
         mybatis.delete("NoticeDao.delete", id);
 
@@ -63,5 +74,9 @@ public class NoticeDao {
 
     public int getBoardTotalCnt(Map<String, String> paramMap) {
         return mybatis.selectOne("NoticeDao.getBoardTotalCnt", paramMap);
+    }
+
+    public List<BoardFileDto> getNoticeFileList(int id) {
+        return mybatis.selectList("NoticeDao.getNoticeFileList", id);
     }
 }

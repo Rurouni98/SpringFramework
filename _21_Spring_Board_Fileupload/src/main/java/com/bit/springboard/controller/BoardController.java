@@ -8,7 +8,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +52,21 @@ public class BoardController {
 
         cri.setAmount(9);
 
-        model.addAttribute("noticeBoardList", boardService.getBoardList(searchMap, cri));
+        List<Map<String, Object>> noticeList = new ArrayList<>();
+
+        boardService.getBoardList(searchMap, cri).forEach(boardDto -> {
+            List<BoardFileDto> boardFileDtoList = boardService.getBoardFileList(boardDto.getId());
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("boardDto", boardDto);
+
+            if(boardFileDtoList.size() > 0)
+                map.put("file", boardFileDtoList.get(0));
+
+            noticeList.add(map);
+        });
+
+        model.addAttribute("noticeList", noticeList);
         model.addAttribute("searchMap", searchMap);
 
         int total = boardService.getBoardTotalCnt(searchMap);
@@ -69,6 +85,7 @@ public class BoardController {
 //        System.out.println(boardService.getBoard(id));
 
         model.addAttribute("freeBoard", boardService.getBoard(boardDto.getId()));
+        model.addAttribute("fileList", boardService.getBoardFileList(boardDto.getId()));
 
         return "board/free-detail";
     }
@@ -99,6 +116,7 @@ public class BoardController {
 //        boardService.plusCnt(boardDto.getId());
 
         model.addAttribute("notice", boardService.getBoard(boardDto.getId()));
+        model.addAttribute("fileList", boardService.getBoardFileList(boardDto.getId()));
 
         return "board/notice-detail";
     }
@@ -115,7 +133,7 @@ public class BoardController {
     }
 
     @PostMapping("post.do")
-    public String post(BoardDto boardDto) {
+    public String post(BoardDto boardDto, MultipartFile[] uploadFiles) {
         // 게시판 타입에 따른 동적 의존성 주입
         if(boardDto.getType().equals("free")) {
             boardService = applicationContext.getBean("freeBoardServiceImpl", BoardService.class);
@@ -123,7 +141,7 @@ public class BoardController {
             boardService = applicationContext.getBean("noticeServiceImpl", BoardService.class);
         }
 
-        boardService.post(boardDto);
+        boardService.post(boardDto, uploadFiles);
 
         if(boardDto.getType().equals("free")) {
             return "redirect:/board/free-list.do"; // 요청을 redirect로 보내지 않으면 post.do 라는 요청이 남아있어서 새로고침하면 post 요청이 다시감.
@@ -175,7 +193,20 @@ public class BoardController {
 
 //        cri.setAmount(cri.getPageNum() * 9);
 
-        List<BoardDto> noticeList = boardService.getBoardList(searchMap, cri);
+        List<Map<String, Object>> noticeList = new ArrayList<>();
+
+        boardService.getBoardList(searchMap, cri).forEach(boardDto -> {
+            List<BoardFileDto> boardFileDtoList = boardService.getBoardFileList(boardDto.getId());
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("boardDto", boardDto);
+
+            if(boardFileDtoList.size() > 0)
+                map.put("file", boardFileDtoList.get(0));
+
+            noticeList.add(map);
+        });
 
         // ResPonseBody 때문에 model 없이 한 방에 넘어가는?
 

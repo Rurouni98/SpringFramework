@@ -5,6 +5,9 @@
 <!--쿼리문이 Dao 클래스에서 분리되어 온 것이기 때문에 namespace는 관례적으로 Dao 클래스명과 일치시킨다.-->
 <mapper namespace="NoticeDao">
     <insert id="post" parameterType="board">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            SELECT IFNULL(MAX(ID), 1) FROM NOTICE
+        </selectKey>
         INSERT INTO NOTICE(
             TITLE,
             CONTENT,
@@ -85,5 +88,37 @@
                 )
             </if>
     </select>
+    <insert id="uploadFiles" parameterType="list">
+        INSERT INTO NOTICE_FILE (
+        BOARD_ID,
+        FILENAME,
+        FILEORIGINNAME,
+        FILEPATH,
+        FILETYPE
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.board_id},
+            #{item.filename},
+            #{item.fileoriginname},
+            #{item.filepath},
+            #{item.filetype}
+            )
+        </foreach>
+    </insert>
+    <select id="getNoticeFileList" parameterType="int" resultType="boardFile">
+        SELECT ID
+             , BOARD_ID
+             , FILENAME
+             , FILEORIGINNAME
+             , FILEPATH
+             , FILETYPE
+        FROM NOTICE_FILE
+        WHERE BOARD_ID = #{id}
+    </select>
+    <delete id="deleteFiles" parameterType="int">
+        DELETE FROM NOTICE_FILE
+        WHERE BOARD_ID = #{id}
+    </delete>
 </mapper>
 
