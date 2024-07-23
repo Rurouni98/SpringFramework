@@ -37,10 +37,23 @@ public class FreeBoardDao {
         System.out.println("FreeBoardDao의 post 메소드 실행 종료");
     }
 
-    public void modify(BoardDto boardDto) {
+    public void modify(BoardDto boardDto, List<BoardFileDto> uFileList) {
         System.out.println("FreeBoardDao의 modify 메소드 실행");
 
         mybatis.update("FreeBoardDao.modify", boardDto);
+
+        if(uFileList.size() > 0) {
+            uFileList.forEach(boardFileDto -> {
+               if(boardFileDto.getFilestatus().equals("I")) {
+                   mybatis.insert("FreeBoardDao.postBoardFileOne", boardFileDto);
+               } else if(boardFileDto.getFilestatus().equals("U")) {
+                   mybatis.update("FreeBoardDao.modifyBoardFileOne", boardFileDto);
+               } else if(boardFileDto.getFilestatus().equals("D")) {
+                   mybatis.delete("FreeBoardDao.deleteBoardFileOne", boardFileDto);
+               }
+            });
+
+        }
 
         System.out.println("FreeBoardDao의 modify 메소드 실행 종료");
     }

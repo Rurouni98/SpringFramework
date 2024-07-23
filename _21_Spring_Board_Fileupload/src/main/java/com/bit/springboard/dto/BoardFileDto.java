@@ -7,6 +7,8 @@ public class BoardFileDto {
     private String fileoriginname;
     private String filepath;
     private String filetype;
+    private String filestatus;
+    private String newfilename;
 
     public int getId() {
         return id;
@@ -56,6 +58,22 @@ public class BoardFileDto {
         this.filetype = filetype;
     }
 
+    public String getFilestatus() {
+        return filestatus;
+    }
+
+    public void setFilestatus(String filestatus) {
+        this.filestatus = filestatus;
+    }
+
+    public String getNewfilename() {
+        return newfilename;
+    }
+
+    public void setNewfilename(String newfilename) {
+        this.newfilename = newfilename;
+    }
+
     @Override
     public String toString() {
         return "BoardFileDto{" +
@@ -65,6 +83,8 @@ public class BoardFileDto {
                 ", fileoriginname='" + fileoriginname + '\'' +
                 ", filepath='" + filepath + '\'' +
                 ", filetype='" + filetype + '\'' +
+                ", filestatus='" + filestatus + '\'' +
+                ", newfilename='" + newfilename + '\'' +
                 '}';
     }
 }

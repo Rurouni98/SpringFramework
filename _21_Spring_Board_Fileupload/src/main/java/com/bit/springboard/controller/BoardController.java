@@ -151,14 +151,16 @@ public class BoardController {
     }
 
     @PostMapping("modify.do")
-    public String modify(BoardDto boardDto) {
+    public String modify(BoardDto boardDto, MultipartFile[] uploadFiles, MultipartFile[] changeFiles,
+                         @RequestParam(name = "originFiles", required = false) String originFiles) {
+        System.out.println(originFiles);
         if(boardDto.getType().equals("free")) {
             boardService = applicationContext.getBean("freeBoardServiceImpl", BoardService.class);
         } else {
             boardService = applicationContext.getBean("noticeServiceImpl", BoardService.class);
         }
 
-        boardService.modify(boardDto);
+        boardService.modify(boardDto, uploadFiles, changeFiles, originFiles);
 
         if(boardDto.getType().equals("free")) {
             return "redirect:/board/free-detail.do?id=" + boardDto.getId();

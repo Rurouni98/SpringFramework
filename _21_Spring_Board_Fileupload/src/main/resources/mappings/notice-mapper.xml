@@ -54,6 +54,7 @@
             OR N.CONTENT LIKE CONCAT('%', #{search.searchKeyword}, '%')
             OR MB.NICKNAME LIKE CONCAT('%', #{search.searchKeyword}, '%'))
         </if>
+        ORDER BY N.ID DESC
         LIMIT #{cri.amount} OFFSET #{cri.startNum}
     </select>
     <delete id="delete" parameterType="int">
@@ -119,6 +120,36 @@
     <delete id="deleteFiles" parameterType="int">
         DELETE FROM NOTICE_FILE
         WHERE BOARD_ID = #{id}
+    </delete>
+    <insert id="postBoardFileOne" parameterType="boardFile">
+        INSERT INTO NOTICE_FILE(
+            BOARD_ID,
+            FILENAME,
+            FILEORIGINNAME,
+            FILEPATH,
+            FILETYPE
+        ) VALUES (
+                     #{board_id},
+                     #{filename},
+                     #{fileoriginname},
+                     #{filepath},
+                     #{filetype}
+                 )
+    </insert>
+    <update id="modifyBoardFileOne" parameterType="boardFile">
+        UPDATE NOTICE_FILE
+        SET
+            FILENAME = #{filename},
+            FILEORIGINNAME = #{fileoriginname},
+            FILEPATH = #{filepath},
+            FILETYPE = #{filetype}
+        WHERE ID = #{id}
+          AND BOARD_ID = #{board_id}
+    </update>
+    <delete id="deleteBoardFileOne" parameterType="boardFile">
+        DELETE FROM NOTICE_FILE
+        WHERE ID = #{id}
+          AND BOARD_ID = #{board_id}
     </delete>
 </mapper>
 

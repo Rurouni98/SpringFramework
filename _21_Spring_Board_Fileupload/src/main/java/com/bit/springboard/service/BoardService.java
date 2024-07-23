@@ -11,7 +11,7 @@ import java.util.Map;
 public interface BoardService {
     void post(BoardDto boardDto, MultipartFile[] uploadFiles);
 
-    void modify(BoardDto boardDto);
+    void modify(BoardDto boardDto, MultipartFile[] uploadFiles, MultipartFile[] changeFiles, String originFiles);
 
     void plusCnt(int id);
 

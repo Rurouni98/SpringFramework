@@ -34,10 +34,23 @@ public class NoticeDao {
         System.out.println("NoticeDao의 post 메소드 실행 종료");
     }
 
-    public void modify(BoardDto boardDto) {
+    public void modify(BoardDto boardDto, List<BoardFileDto> uFileList) {
         System.out.println("NoticeDao의 modify 메소드 실행");
 
         mybatis.update("NoticeDao.modify", boardDto);
+
+        if(uFileList.size() > 0) {
+            uFileList.forEach(boardFileDto -> {
+                if(boardFileDto.getFilestatus().equals("I")) {
+                    mybatis.insert("NoticeDao.postBoardFileOne", boardFileDto);
+                } else if(boardFileDto.getFilestatus().equals("U")) {
+                    mybatis.update("NoticeDao.modifyBoardFileOne", boardFileDto);
+                } else if(boardFileDto.getFilestatus().equals("D")) {
+                    mybatis.delete("NoticeDao.deleteBoardFileOne", boardFileDto);
+                }
+            });
+
+        }
 
         System.out.println("NoticeDao의 modify 메소드 실행 종료");
     }
